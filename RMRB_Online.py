@@ -2,6 +2,12 @@ import requests
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import time
+import os
+
+"""
+Author: OddMiss
+Github: https://github.com/OddMiss
+"""
 
 '''
 To make running your Python command more convenient and simple in the command prompt (cmd), you can use one of the following methods:
@@ -112,7 +118,7 @@ The reason why creating a `doskey` macro through the Windows Registry works is r
 In summary, by leveraging the Windows Registry's ability to run commands automatically upon the initialization of the command prompt, you can create a robust method for preserving your `doskey` macros across sessions and reboots.
 '''
 
-ROOT_PATH = "D:/AI_data_analysis/RMRB/Online_Download/"
+ROOT_PATH = "D:/AI_data_analysis/RMRB/Online_Download/" # Change it based on your fold
 
 def Extract_Version_Num(YEAR, MONTH, DAY):
     RMRB_url = f"http://paper.people.com.cn/rmrb/html/{YEAR}-{MONTH}/{DAY}/nbs.D110000renmrb_01.htm"
@@ -148,9 +154,10 @@ def Extract_Version_Num(YEAR, MONTH, DAY):
         print(f"Error fetching the page: {e}")
         return None
 
-def RMRB_PDF_Download(Begin_date: str=datetime.today().strftime("%Y%m%d"), 
-                      End_date: str=datetime.today().strftime("%Y%m%d"), 
-                      Today_Bool: bool=False):
+def RMRB_PDF_Download(Begin_date: str, End_date: str, Today_Bool: bool=False):
+    """
+    Begin_date, End_date: formatted string date like "19491001"
+    """
     if Today_Bool: 
         today = datetime.today()
         start_date = datetime(today.year, today.month, today.day)
@@ -198,15 +205,34 @@ def RMRB_PDF_Download(Begin_date: str=datetime.today().strftime("%Y%m%d"),
     print("Stript End...")
     print("*" * 80)
 
+def Check_RMRB_Exist(Begin_date: str, End_date: str):
+    """
+    Begin_date, End_date: formatted string date like "19491001"
+    """
+    start_date = datetime(int(Begin_date[:4]), int(Begin_date[4:6]), int(Begin_date[-2:]))
+    end_date = datetime(int(End_date[:4]), int(End_date[4:6]), int(End_date[-2:]))
+    current_date = start_date
+    missing_dates = []
+    while current_date <= end_date:
+        date_str = current_date.strftime("%Y%m%d")
+        file_name = date_str + "01" + ".pdf"
+        file_path = ROOT_PATH + file_name
+        if not os.path.exists(file_path):
+            missing_dates.append(date_str)
+        current_date += timedelta(days=1)
+    return missing_dates
 # Example usage
 # RMRB_PDF_Download(Today_Bool=True)
 
 if __name__ == "__main__":
     print("#" * 10 + "Welcome to RMRB download stript" + "#" * 10)
-    TODAY = input("Download today's RMRB? (Y/N): ")
+    TODAY = datetime.today().strftime("%Y%m%d")
+    print(f"Today's date: {TODAY}")
+    print("""Download type: \n C: Customized dates \n T: Download today's RMRB \n U: Download RMRB from 20240709 until today""")
+    TYPE = input("Please input type: ")
     TODAY_BOOL = False
     DATE_BOOL = False
-    if TODAY == "N": 
+    if TYPE == "C": 
         while True:
             BEGIN_DATE = input("Please input start date: (Format like YYYYMMDD: 19491001): ")
             # Basic validation
@@ -219,7 +245,22 @@ if __name__ == "__main__":
                 print("Invalid date format. Please make sure it's in YYYYMMDD format.")
             else: break
         RMRB_PDF_Download(Begin_date=BEGIN_DATE, End_date=END_DATE, Today_Bool=TODAY_BOOL)
-    elif TODAY == "Y": 
+    elif TYPE == "Y": 
         TODAY_BOOL = True
         RMRB_PDF_Download(Today_Bool=TODAY_BOOL)
-    else: print("Invalid input, please input Y or N.")
+    elif TYPE == "U":
+        Missing_Dates = Check_RMRB_Exist("20240709", TODAY)
+        if len(Missing_Dates):
+            print("The missing dates:")
+            for date in Missing_Dates:
+                print(date)
+            Download = input("Download (Y/N)? ")
+            if Download == "Y":
+                for date in Missing_Dates:
+                    RMRB_PDF_Download(Begin_date=date, End_date=date, Today_Bool=False)
+            elif Download == "N": exit()
+            else: print("Invalid input, please input Y or N.")
+        else: 
+            print("There is no missing date from 20240709 until today")
+            exit()
+    else: print("Invalid input, please input C or Y or U.")

@@ -121,7 +121,9 @@ In summary, by leveraging the Windows Registry's ability to run commands automat
 ROOT_PATH = "D:/AI_data_analysis/RMRB/Online_Download/" # Change it based on your fold
 
 def Extract_Version_Num(YEAR, MONTH, DAY):
+    print(f"YEAR: {YEAR}, MONTH: {MONTH}, DAY: {DAY}")
     RMRB_url = f"http://paper.people.com.cn/rmrb/html/{YEAR}-{MONTH}/{DAY}/nbs.D110000renmrb_01.htm"
+    # RMRB_url = "http://paper.people.com.cn/rmrb/html/2024-11/18/nbs.D110000renmrb_01.htm"
     versions = 0
     try:
         # Send a GET request to the URL
@@ -149,7 +151,9 @@ def Extract_Version_Num(YEAR, MONTH, DAY):
                 return None
         else:
             print("No swiper-box found.")
-            return None
+            print(f"URL: {RMRB_url}")
+            Version_Num = input("Please input version number by hand: ")
+            return int(Version_Num)
     except requests.exceptions.RequestException as e:
         print(f"Error fetching the page: {e}")
         return None

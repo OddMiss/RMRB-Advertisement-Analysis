@@ -231,7 +231,13 @@ def Check_RMRB_Exist(Begin_date: str, End_date: str):
 if __name__ == "__main__":
     print("#" * 10 + "Welcome to RMRB download stript" + "#" * 10)
     TODAY = datetime.today().strftime("%Y%m%d")
-    print(f"Today's date: {TODAY}")
+    # Get the weekday (0=Monday, 6=Sunday) and adjust it so that Monday is 1 and Sunday is 7
+    WEEKDAY = datetime.today().weekday() + 1  # weekday() returns 0=Monday, 6=Sunday, so add 1 to make Monday=1
+    WEEKDAY_DICT = {"1": "Monday", "2": "Tuesday", 
+                    "3": "Wednesday", "4": "Thursday", 
+                    "5": "Friday", "6": "Saturday", 
+                    "7": "Sunday"}
+    print(f"Today's date: {TODAY}. Today's weekday: {WEEKDAY_DICT[str(WEEKDAY)]}")
     print("""Download type: \n C: Customized dates \n T: Download today's RMRB \n U: Download RMRB from 20240709 until today""")
     TYPE = input("Please input type: ")
     TODAY_BOOL = False
@@ -249,7 +255,7 @@ if __name__ == "__main__":
                 print("Invalid date format. Please make sure it's in YYYYMMDD format.")
             else: break
         RMRB_PDF_Download(Begin_date=BEGIN_DATE, End_date=END_DATE, Today_Bool=TODAY_BOOL)
-    elif TYPE == "Y": 
+    elif TYPE == "T": 
         TODAY_BOOL = True
         RMRB_PDF_Download(Today_Bool=TODAY_BOOL)
     elif TYPE == "U":

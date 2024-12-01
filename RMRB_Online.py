@@ -119,6 +119,10 @@ In summary, by leveraging the Windows Registry's ability to run commands automat
 '''
 
 ROOT_PATH = "D:/AI_data_analysis/RMRB/Online_Download/" # Change it based on your fold
+WEEKDAY_DICT = {"1": "Monday", "2": "Tuesday", 
+                "3": "Wednesday", "4": "Thursday", 
+                "5": "Friday", "6": "Saturday", 
+                "7": "Sunday"}
 
 def Extract_Version_Num(YEAR, MONTH, DAY):
     print(f"YEAR: {YEAR}, MONTH: {MONTH}, DAY: {DAY}")
@@ -175,8 +179,10 @@ def RMRB_PDF_Download(Begin_date: str, End_date: str, Today_Bool: bool=False):
     current_date = start_date
     while current_date <= end_date:
         DATE = current_date.strftime("%Y%m%d")
+        # Get the weekday (0=Monday, 6=Sunday) and adjust it so that Monday is 1 and Sunday is 7
+        Weekday = current_date.weekday() + 1  # weekday() returns 0=Monday, 6=Sunday, so add 1 to make Monday=1
         print("*" * 80)
-        print("Date:", DATE)
+        print(f"Date: {DATE}, Weekday: {WEEKDAY_DICT[str(Weekday)]}")
         YEAR = str(current_date.year)
         MONTH = str(current_date.month)
         MONTH = ("0" + MONTH) if len(MONTH) == 1 else MONTH
@@ -233,10 +239,6 @@ if __name__ == "__main__":
     TODAY = datetime.today().strftime("%Y%m%d")
     # Get the weekday (0=Monday, 6=Sunday) and adjust it so that Monday is 1 and Sunday is 7
     WEEKDAY = datetime.today().weekday() + 1  # weekday() returns 0=Monday, 6=Sunday, so add 1 to make Monday=1
-    WEEKDAY_DICT = {"1": "Monday", "2": "Tuesday", 
-                    "3": "Wednesday", "4": "Thursday", 
-                    "5": "Friday", "6": "Saturday", 
-                    "7": "Sunday"}
     print(f"Today's date: {TODAY}. Today's weekday: {WEEKDAY_DICT[str(WEEKDAY)]}")
     print("""Download type: \n C: Customized dates \n T: Download today's RMRB \n U: Download RMRB from 20240709 until today""")
     TYPE = input("Please input type: ")

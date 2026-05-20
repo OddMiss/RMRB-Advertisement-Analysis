@@ -19,6 +19,7 @@ Get original RMRB PDF
    - `MODEL_PATH` for PaddleOCR models
 3. Download PaddleOCR model folders into `MODEL_PATH` (see PaddleOCR model list/releases):
    - https://github.com/PaddlePaddle/PaddleOCR/blob/main/doc/doc_en/models_list_en.md
+   - https://github.com/PaddlePaddle/PaddleOCR/releases
    - `PP-DocLayout_plus-L_infer/`
    - `PP-OCRv5_server_det_infer/`
    - `PP-OCRv5_server_rec_infer/`
@@ -29,7 +30,7 @@ Get original RMRB PDF
      ```
      MODEL = {
        "GEMINI": {
-         "URL": "",
+         "URL": "",  # Not used for GEMINI; required for most other APIs
          "Models": ["gemini-2.5-flash"],
          "Keys": ["<api-key>"]
        }

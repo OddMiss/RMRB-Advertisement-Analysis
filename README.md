@@ -27,7 +27,7 @@ Get original RMRB PDF
 4. Create `Config/API.py` (gitignored) with your LLM providers and keys:
    - Required by `RMRBCore/RMRB_LLM_v5.py` (`MODEL` dict with URL/Models/Keys)
    - Example:
-     ```
+     ```python
      MODEL = {
        "GEMINI": {
          "URL": "",  # Not used for GEMINI; required for most other APIs

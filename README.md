@@ -17,13 +17,24 @@ Get original RMRB PDF
 2. Configure data paths in `Config/Config.py`:
    - `MAIN_PATH` / `EXTERNAL_PATH` / `EXTERNAL_PATH_LIST`
    - `MODEL_PATH` for PaddleOCR models
-3. Download PaddleOCR model folders into `MODEL_PATH`:
+3. Download PaddleOCR model folders into `MODEL_PATH` (see PaddleOCR model list/releases):
+   - https://github.com/PaddlePaddle/PaddleOCR/blob/main/doc/doc_en/models_list_en.md
    - `PP-DocLayout_plus-L_infer/`
    - `PP-OCRv5_server_det_infer/`
    - `PP-OCRv5_server_rec_infer/`
    - `PP-Chart2Table_infer/`
 4. Create `Config/API.py` (gitignored) with your LLM providers and keys:
    - Required by `RMRBCore/RMRB_LLM_v5.py` (`MODEL` dict with URL/Models/Keys)
+   - Example:
+     ```
+     MODEL = {
+       "GEMINI": {
+         "URL": "",
+         "Models": ["gemini-2.5-flash"],
+         "Keys": ["<api-key>"]
+       }
+     }
+     ```
 
 ## Data Layout
 The analysis pipeline reads/writes under the data root (from `Config/Config.py`).

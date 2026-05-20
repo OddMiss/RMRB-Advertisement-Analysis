@@ -1,7 +1,25 @@
-CMD interface (v1):
+# RMRB Analysis
 
-![image](https://github.com/user-attachments/assets/cca000ad-283d-43fb-9dee-2b038f82e0b3)
+```
+Work Flow
 
-(v1.1):
+Get Original RMRB PDF
+→ Detect Advertisement by Computer Vision Technique
+→ Generate Advertisement Images to local (Full / Half)
+→ Convert Images to Text using OCR
+→ Use AI to Classify Industry of Advertisement
+```
 
-![image](https://github.com/user-attachments/assets/ea2e786d-286f-480b-af6e-1c6f56449d93)
+# RMRB Online Downloader
+
+CMD interface (RMRB_Online_v1):
+
+![image](./Figs/RMRB_Online_v1.png)
+
+(RMRB_Online_v1.1):
+
+![image](./Figs/RMRB_Online_v1.1.png)
+
+(RMRB_Downloader_v2) (Old name `RMRB_Online`)
+
+![1764331181508](Figs/Downloaderv2.png)

@@ -20,6 +20,7 @@ Get original RMRB PDF
 3. Download PaddleOCR model folders into `MODEL_PATH` (see PaddleOCR model list/releases):
    - https://github.com/PaddlePaddle/PaddleOCR/blob/main/doc/doc_en/models_list_en.md
    - https://github.com/PaddlePaddle/PaddleOCR/releases
+   - Extract the archives so the listed folders are direct children of `MODEL_PATH`.
    - `PP-DocLayout_plus-L_infer/`
    - `PP-OCRv5_server_det_infer/`
    - `PP-OCRv5_server_rec_infer/`

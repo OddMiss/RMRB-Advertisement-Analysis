@@ -7,7 +7,7 @@ from io import BytesIO
 import time
 import os
 from Config.Config import WEEKDAY_DICT
-from RMRBCore.RMRB_PDF_v5 import PDF_Split_All
+from RMRBCore.RMRB_PDF_v6 import PDF_Split_All
 from Utils.main import PrintUtils, FileUtils, TextUtils
 THREAD_SAFE_PRINT = PrintUtils.THREAD_SAFE_PRINT
 Check_Folder = FileUtils.Check_Folder

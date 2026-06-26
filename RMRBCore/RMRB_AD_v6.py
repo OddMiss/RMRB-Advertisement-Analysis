@@ -11,8 +11,8 @@ from collections import defaultdict
 from collections import Counter
 import matplotlib.pyplot as plt
 from pdf2image import convert_from_path
-from RMRBCore.RMRB_PDF_v5 import Check_PDF_Exist
-from RMRBCore.RMRB_Image_v5 import CV_Detect_Ads
+from RMRBCore.RMRB_PDF_v6 import Check_PDF_Exist
+from RMRBCore.RMRB_Image_v6 import CV_Detect_Ads
 from Config.Config import Advertisement_Text, Cipher_AD
 from Utils.main import PrintUtils, FileUtils, JsonUtils, TimeUtils, TextUtils
 Create_Date = TimeUtils.Create_Date

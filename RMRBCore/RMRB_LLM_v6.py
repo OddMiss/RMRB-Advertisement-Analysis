@@ -17,7 +17,7 @@ from Config.Config import WEEKDAY_CHINESE_DICT, API_USAGE_PATH, EXIT_ERRORS
 from Config.API import MODEL
 from Config.Prompt import Industry_Text, System_Prompt
 from Utils.main import PrintUtils, FileUtils, JsonUtils, TextUtils
-from RMRBCore.RMRB_Error_v5 import Exit_Error_Detector
+from RMRBCore.RMRB_Error_v6 import Exit_Error_Detector
 THREAD_SAFE_PRINT = PrintUtils.THREAD_SAFE_PRINT
 Check_Folder = FileUtils.Check_Folder
 Check_File = FileUtils.Check_File

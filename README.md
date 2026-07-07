@@ -1,5 +1,7 @@
 # RMRB Analysis
 
+Latest version: **RMRB Analysis v6** (updated through 2026.6.25)
+
 ## Overview
 Analyze People’s Daily (人民日报, RMRB) advertisements by detecting ad pages, extracting ad blocks, running OCR, and generating LLM-based industry classification and commentary.
 
@@ -26,7 +28,7 @@ Get original RMRB PDF
    - `PP-OCRv5_server_rec_infer/`
    - `PP-Chart2Table_infer/`
 4. Create `Config/API.py` (gitignored) with your LLM providers and keys:
-   - Required by `RMRBCore/RMRB_LLM_v5.py` (`MODEL` dict with URL/Models/Keys)
+   - Required by `RMRBCore/RMRB_LLM_v6.py` (`MODEL` dict with URL/Models/Keys)
    - Example:
      ```python
      MODEL = {
@@ -75,8 +77,8 @@ Windows users can use the `.bat` scripts in `Scripts/` (or `PortableScripts/`).
    - `python RMRB_LLM.py`
    - Generates `Summary~...` fields in the same JSON files.
 5. **Notebooks**
-   - `RMRB_Analysis_v5.ipynb`
-   - `RMRBCore/AD-Quant-Analysis.ipynb`, `AD_Text_Analysis.ipynb`, etc.
+   - `RMRB_Analysis_v6.ipynb`
+   - `RMRBCore/AD-Quant-Analysis.ipynb`, `Industry-Analysis.ipynb`, `AD_Text_Analysis.ipynb`, etc.
 
 # RMRB Online Downloader
 

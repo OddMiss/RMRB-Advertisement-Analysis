@@ -47,5 +47,9 @@ Desktop.ini
 # API
 Config/API.py
 
+# Data archive (large, not distributed) and pipeline artefacts
+/RMRBData
+/Output
+
 # Others
 /Test

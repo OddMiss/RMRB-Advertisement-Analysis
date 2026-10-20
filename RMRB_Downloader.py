@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 # Get the folder where THIS script is running
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -7,14 +8,88 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 if script_dir not in sys.path:
     sys.path.append(script_dir)
 
-from RMRB_Main import RMRB_PDF_Downloader, Check_RMRB_Exist
+from RMRBCore.RMRB_Downloader_v2 import RMRB_PDF_Downloader, Check_RMRB_Exist
 from Config.Config import EXTERNAL_PATH_LIST, EXTERNAL_PATH, WEEKDAY_DICT
 # from Config.Config import LOG_PATH
-from datetime import datetime
+from datetime import datetime, timedelta
 from Utils.main import FileUtils, PrintUtils, TimeUtils
 Check_Folder = FileUtils.Check_Folder
 THREAD_SAFE_PRINT = PrintUtils.THREAD_SAFE_PRINT
 NowTime = TimeUtils.NowTime
+
+DEFAULT_UPDATE_BEGIN_DATE = "20260101"
+DAILY_DOWNLOAD_HOUR = 12
+
+
+def Download_Missing_RMRB(Begin_Date, End_Date, Download_Path, Log_File_Path=""):
+    """Download every missing RMRB date in the inclusive date range."""
+    Missing_Dates = Check_RMRB_Exist(
+        Begin_date=Begin_Date,
+        End_date=End_Date,
+        Download_Path=Download_Path,
+        Log_File_Path=Log_File_Path,
+    )
+    if not Missing_Dates:
+        THREAD_SAFE_PRINT(
+            "RMRB Downloader Main",
+            f"There is no missing date from {Begin_Date} until {End_Date}",
+            Log_File_Path,
+        )
+        return []
+
+    THREAD_SAFE_PRINT("RMRB Downloader Main", "The missing dates:", Log_File_Path)
+    for date in Missing_Dates:
+        THREAD_SAFE_PRINT("RMRB Downloader Main", date, Log_File_Path)
+        RMRB_PDF_Downloader(
+            Begin_date=date,
+            End_date=date,
+            Download_Path=Download_Path,
+            Log_File_Path=Log_File_Path,
+        )
+    return Missing_Dates
+
+
+def Get_Next_Daily_Run(Now=None, Hour=DAILY_DOWNLOAD_HOUR):
+    """Return the next local daily run time, strictly after ``Now``."""
+    Now = Now or datetime.now()
+    Next_Run = Now.replace(hour=Hour, minute=0, second=0, microsecond=0)
+    if Next_Run <= Now:
+        Next_Run += timedelta(days=1)
+    return Next_Run
+
+
+def Run_Daily_Downloader(
+    Download_Path,
+    Log_File_Path="",
+    Begin_Date=DEFAULT_UPDATE_BEGIN_DATE,
+    Hour=DAILY_DOWNLOAD_HOUR,
+    Now_Function=datetime.now,
+    Sleep_Function=time.sleep,
+    Max_Scheduled_Runs=None,
+):
+    """
+    Catch up through today, then check and download missing papers every day.
+
+    ``Max_Scheduled_Runs`` and the injected clock/sleep functions make the
+    scheduler testable; normal interactive use leaves them at their defaults.
+    """
+    Today = Now_Function().strftime("%Y%m%d")
+    Download_Missing_RMRB(Begin_Date, Today, Download_Path, Log_File_Path)
+
+    Scheduled_Runs = 0
+    while Max_Scheduled_Runs is None or Scheduled_Runs < Max_Scheduled_Runs:
+        Now = Now_Function()
+        Next_Run = Get_Next_Daily_Run(Now, Hour)
+        THREAD_SAFE_PRINT(
+            "RMRB Daily Downloader",
+            f"Next automatic check: {Next_Run.strftime('%Y-%m-%d %H:%M:%S')}",
+            Log_File_Path,
+        )
+        Sleep_Function(max(0, (Next_Run - Now).total_seconds()))
+
+        Today = Now_Function().strftime("%Y%m%d")
+        Download_Missing_RMRB(Begin_Date, Today, Download_Path, Log_File_Path)
+        Scheduled_Runs += 1
 
 if __name__ == "__main__":
     
@@ -45,11 +120,11 @@ if __name__ == "__main__":
           f"Today's date: {TODAY}. Today's weekday: {WEEKDAY_DICT[str(WEEKDAY)]}", 
           LogFilePath)
     THREAD_SAFE_PRINT("RMRB Downloader Main", 
-          """Download type: \n C: Customized Dates \n T: Download Today's RMRB \n U: Download RMRB from 20250101 Until Today \n S: Download RMRB for specific date of version (like 2024122401)""", 
+          f"""Download type: \n C: Customized Dates \n T: Download Today's RMRB \n U: Download RMRB from {DEFAULT_UPDATE_BEGIN_DATE} Until Today \n D: Daily mode (catch up, then automatically check every day at 12:00) \n S: Download RMRB for specific date of version (like 2024122401)""",
           LogFilePath)
     
     while True:
-        TYPE = input("Please input type: ")
+        TYPE = input("Please input type: ").strip().upper()
         # C: Customized Dates
         if TYPE == "C": 
             while True:
@@ -68,9 +143,9 @@ if __name__ == "__main__":
         elif TYPE == "T": 
             today = datetime.today().strftime('%Y%m%d')
             RMRB_PDF_Downloader(Begin_date=today, End_date=today, Download_Path=External_Path, Log_File_Path=LogFilePath)
-        # U: Download RMRB from 20260101 Until Today
+        # U: Download RMRB from the default begin date until today
         elif TYPE == "U":
-            Missing_Dates = Check_RMRB_Exist(Begin_date="20260101", End_date=TODAY, Download_Path=External_Path, Log_File_Path=LogFilePath)
+            Missing_Dates = Check_RMRB_Exist(Begin_date=DEFAULT_UPDATE_BEGIN_DATE, End_date=TODAY, Download_Path=External_Path, Log_File_Path=LogFilePath)
             if len(Missing_Dates):
                 THREAD_SAFE_PRINT("RMRB Downloader Main", "The missing dates:", LogFilePath)
                 for date in Missing_Dates:
@@ -82,7 +157,17 @@ if __name__ == "__main__":
                 elif Download == "N": exit()
                 else: THREAD_SAFE_PRINT("RMRB Downloader Main", "Invalid input, please input Y or N.", LogFilePath)
             else: 
-                THREAD_SAFE_PRINT("RMRB Downloader Main", "There is no missing date from 20260101 until today", LogFilePath)
+                THREAD_SAFE_PRINT("RMRB Downloader Main", f"There is no missing date from {DEFAULT_UPDATE_BEGIN_DATE} until today", LogFilePath)
+                exit()
+        # D: Catch up through today, then automatically check every day at noon
+        elif TYPE == "D":
+            try:
+                Run_Daily_Downloader(
+                    Download_Path=External_Path,
+                    Log_File_Path=LogFilePath,
+                )
+            except KeyboardInterrupt:
+                THREAD_SAFE_PRINT("RMRB Daily Downloader", "Daily mode stopped by user.", LogFilePath)
                 exit()
         # S: Download RMRB for specific date of version (like 2024122401)
         elif TYPE == "S":
@@ -94,4 +179,4 @@ if __name__ == "__main__":
                 else: 
                     Custom_Version = DATE[-2:]
                     RMRB_PDF_Downloader(Begin_date=DATE[:8], End_date=DATE[:8], Custom_Versions=[Custom_Version], Download_Path=External_Path)
-        else: THREAD_SAFE_PRINT("RMRB Downloader Main", "Invalid input, please input C or Y or U or S.", LogFilePath)
+        else: THREAD_SAFE_PRINT("RMRB Downloader Main", "Invalid input, please input C, T, U, D or S.", LogFilePath)

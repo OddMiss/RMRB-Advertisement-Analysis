@@ -184,3 +184,7 @@ python RMRBCore/RMRB_Pipeline_v6.py --rebuild --figures
 （RMRB_Downloader_v2，旧名 `RMRB_Online`）
 
 ![1764331181508](Figs/Downloaderv2.png)
+
+下载类型 `D` 为每日模式：启动后先补齐 `20260101` 至今天之间缺失的报纸，
+随后保持进程运行，并在本地时间每天 12:00 自动检查和补齐。需要保持终端开启；
+按 `Ctrl+C` 可停止每日模式。

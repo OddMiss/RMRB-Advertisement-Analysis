@@ -274,3 +274,8 @@ CMD interface (RMRB_Online_v1):
 (RMRB_Downloader_v2) (Old name `RMRB_Online`)
 
 ![1764331181508](Figs/Downloaderv2.png)
+
+Download type `D` runs in daily mode: it first downloads all missing papers
+from `20260101` through today, then keeps the process running and automatically
+checks for missing papers every day at 12:00 local time. Keep the terminal open
+for the daily schedule to continue; press `Ctrl+C` to stop it.

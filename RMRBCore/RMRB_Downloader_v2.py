@@ -185,7 +185,7 @@ def PDF_Link_Downloader_JOJO(PDF_Link, Store_Path, Custom_Versions=[], Max_Retri
                 return False
         time.sleep(10)
 
-def RMRB_PDF_Downloader(Begin_date: str, End_date: str, Download_Path, Custom_Versions=[], Log_File_Path=""):
+def RMRB_PDF_Downloader(Begin_date: str, End_date: str, Download_Path, Custom_Versions=None, Log_File_Path=""):
     """
     - Core function of RMRB downloader
     - Begin_date, End_date: formatted string date like "19491001"
@@ -213,8 +213,8 @@ def RMRB_PDF_Downloader(Begin_date: str, End_date: str, Download_Path, Custom_Ve
                 THREAD_SAFE_PRINT("RMRB PDF Downloader", f"❌No Version Info", Log_File_Path)
                 return
             THREAD_SAFE_PRINT("RMRB PDF Downloader", f"All version: {Version_num}", Log_File_Path)
-            if not Custom_Versions: Custom_Versions = [Format_Num(Version) for Version in range(1, Version_num + 1)]
-            for Version in Custom_Versions:
+            versions_to_download = Custom_Versions or [Format_Num(Version) for Version in range(1, Version_num + 1)]
+            for Version in versions_to_download:
                 Version_str = Format_Num(Version)
                 THREAD_SAFE_PRINT("RMRB PDF Downloader", f"Version num: {Version_str}", Log_File_Path)
                 # pdf_url_old = f"http://paper.people.com.cn/rmrb/images/{YEAR}-{MONTH}/{DAY}/{Version_str}/rmrb{DATE}{Version_str}.pdf"

@@ -1,17 +1,20 @@
 # RMRB Analysis
 
 ## Overview
+
 Analyze People’s Daily (人民日报, RMRB) advertisements by detecting ad pages, extracting ad blocks, running OCR, and generating LLM-based industry classification and commentary.
 
 ## Workflow
-Get original RMRB PDF  
-→ Detect advertisements by computer vision/text rules  
-→ Generate advertisement images (full/half/CV)  
-→ Extract ad blocks and filter duplicates  
-→ Convert images to text using OCR  
+
+Get original RMRB PDF
+→ Detect advertisements by computer vision/text rules
+→ Generate advertisement images (full/half/CV)
+→ Extract ad blocks and filter duplicates
+→ Convert images to text using OCR
 → Use AI to classify industry + ad type + region + analysis
 
 ## Setup
+
 1. Install dependencies:
    - `pip install -r requirements.txt`
 2. Configure data paths in `Config/Config.py`:
@@ -39,6 +42,7 @@ Get original RMRB PDF
      ```
 
 ## Data Layout
+
 The analysis pipeline reads/writes under the data root (from `Config/Config.py`).
 
 ```
@@ -57,6 +61,7 @@ The analysis pipeline reads/writes under the data root (from `Config/Config.py`)
 ```
 
 ## Run Analysis (CLI)
+
 Windows users can use the `.bat` scripts in `Scripts/` (or `PortableScripts/`).
 
 1. **Prepare PDFs (optional tools)**
@@ -77,6 +82,8 @@ Windows users can use the `.bat` scripts in `Scripts/` (or `PortableScripts/`).
 5. **Notebooks**
    - `RMRB_Analysis_v5.ipynb`
    - `RMRBCore/AD-Quant-Analysis.ipynb`, `AD_Text_Analysis.ipynb`, etc.
+
+> ETF, index list data source: Wencai from Tonghuashun (Question -> Share Link -> Data link -> Web scraper)
 
 # RMRB Online Downloader
 
